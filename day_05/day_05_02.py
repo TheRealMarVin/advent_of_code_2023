@@ -55,8 +55,8 @@ def get_values_in_map(value, maps):
 
         if not has_matched:
             result.extend(non_matching)
-        elif len(value) > 0:
-            result.extend(values)
+    if len(value) > 0:
+        result.extend(values)
 
     if len(result) == 0:
         result.append(value)
