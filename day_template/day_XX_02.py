@@ -1,10 +1,11 @@
 import numpy as np
 
+from day_template.prepare_data import prepare_data
+
 
 def main():
     # Read input data from a file
-    with open('data.txt', 'r') as file:
-        input_data = file.readlines()
+    input_data = prepare_data(use_dev_data=False)
 
 
 if __name__ == "__main__":
