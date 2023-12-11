@@ -1,5 +1,3 @@
-from collections import deque
-
 import numpy as np
 from tqdm import tqdm
 
@@ -12,24 +10,16 @@ def manhattan_distance(start, end):
 
 def main():
     # Read input data from a file
-    input_data = prepare_data(use_dev_data=False)
-
-    indices = np.where(input_data == '#')
-    positions = [p for p in zip(indices[0], indices[1])]
-
-    position_pairs = []
-    for index, p in tqdm(enumerate(positions[:-1])):
-        for p2 in positions[index+1:]:
-            position_pairs.append((p, p2))
+    position_pairs = prepare_data(use_dev_data=False, multiplier=2)
 
     path_length = []
-    for p1, p2 in tqdm(position_pairs):
+    for p1, p2 in tqdm(position_pairs, desc='compute dist', total=len(position_pairs)):
         path = manhattan_distance(p1, p2)
         path_length.append(path)
 
     res = np.array(path_length).sum()
     print(res)
-    a = 0
+    # 9565386
 
 
 if __name__ == "__main__":
