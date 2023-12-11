@@ -1,5 +1,9 @@
+import fnmatch
 import os
+import re
 import shutil
+
+import requests
 
 
 def get_highest_day_number(folder_path):
@@ -29,6 +33,7 @@ def copy_folder(source_folder, destination_folder):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+
 def rename_files_with_pattern(folder_path, pattern, replacement):
     try:
         # List all files in the specified folder
@@ -53,6 +58,40 @@ def rename_files_with_pattern(folder_path, pattern, replacement):
         print(f"An error occurred: {e}")
 
 
+def modify_file(file_path, pattern, replacement):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+
+    for i, line in enumerate(lines):
+        if re.search(pattern, line):
+            lines[i] = re.sub(pattern, replacement, line)
+
+    with open(file_path, 'w') as file:
+        file.writelines(lines)
+
+
+def find_python_files(folder_path, start_pattern):
+    files = []
+    for root, dirs, filenames in os.walk(folder_path):
+        for filename in filenames:
+            if filename.startswith(start_pattern) and filename.endswith(".py"):
+                files.append(os.path.join(root, filename))
+
+    return files
+
+
+def download_daily_input(url, output_file):
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        with open(output_file, 'wb') as file:
+            file.write(response.content)
+        print(f"Content downloaded and saved to {output_file}")
+    else:
+        print(f"Failed to download content. Status code: {response.status_code}")
+
+
+
 def main():
     folder_path = "./"
     highest_number = get_highest_day_number(folder_path)
@@ -61,12 +100,16 @@ def main():
         print(f"The highest number in folder names is: {highest_number}")
 
         source_path = "./day_template"
-        fixed_length_string = str(highest_number + 1).zfill(2)
-        destination_path = "./day_{}".format(fixed_length_string)
+        next_day_string = str(highest_number + 1).zfill(2)
+        destination_path = "./day_{}".format(next_day_string)
 
         copy_folder(source_path, destination_path)
 
-        rename_files_with_pattern(destination_path, "XX", fixed_length_string)
+        rename_files_with_pattern(destination_path, "XX", next_day_string)
+
+        files = find_python_files(destination_path, "day_")
+        for file in files:
+            modify_file(file, "day_template", "day_{}".format(11))
 
     else:
         print("No matching folders found in the specified path.")
