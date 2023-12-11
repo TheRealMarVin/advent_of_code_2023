@@ -10,3 +10,9 @@ def prepare_data(use_dev_data=False):
     input_data = [string.rstrip('\n') for string in input_data]
 
     return input_data
+
+
+if __name__ == "__main__":
+    print("Hello")
+    prepare_data(True)
+    print("Done")
