@@ -109,7 +109,7 @@ def main():
 
         files = find_python_files(destination_path, "day_")
         for file in files:
-            modify_file(file, "day_template", "day_{}".format(11))
+            modify_file(file, "day_template", "day_{}".format(next_day_string))
 
     else:
         print("No matching folders found in the specified path.")
